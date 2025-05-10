@@ -1,18 +1,154 @@
 ---
-// Fundation
+// Foundation
+import { Image } from "astro:assets";
+import One from "@/images/1.png";
+import Two from "@/images/2.png";
+import Three from "@/images/3.png";
+import Four from "@/images/4.png";
+import Flowers from "@/images/flowers.jpeg";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-// Sections
-import Intro from "@/components/landing/Intro.astro";
-import Projects from "@/components/landing/Projects.astro";
-import Work from "@/components/landing/Work.astro";
-import Education from "@/components/landing/Education.astro";
-import Speaking from "@/components/landing/Speaking.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
 ---
-
 <BaseLayout>
-  <Intro />
-  <Projects />
-  <Work />
-  <Education />
-  <Speaking />
+  <section class="relative bg-[#eeece6] overflow-hidden">
+    <Wrapper class="min-h-screen flex flex-col items-center justify-center">
+      <div class="grid grid-cols-1 lg:grid-cols-4 lg:-mt-32">
+        <Image
+          class="aspect-square w-full rounded-full object-cover"
+          src={Four}
+          alt="Four"
+          width={1200}
+          height={1200}
+        />
+        <Image
+          class="aspect-square w-full rounded-full object-cover"
+          src={Three}
+          alt="Three"
+          width={1200}
+          height={1200}
+        />
+        <Image
+          class="aspect-square w-full rounded-full object-cover"
+          src={Two}
+          alt="Two"
+          width={1200}
+          height={1200}
+        />
+        <Image
+          class="aspect-square w-full rounded-full object-cover"
+          src={One}
+          alt="One"
+          width={1200}
+          height={1200}
+        />
+      </div>
+      <!-- Main Content -->
+      <div class="relative  text-center max-w-md mx-auto mt-12">
+        <h1 class="text-4xl font-medium text-zinc-900">Glad Mors dag!!</h1>
+        <p class="mt-4 text-lg text-zinc-600">
+          Tryck på knappen för att se speciella meddelanden
+        </p>
+        <!-- Message Display -->
+        <div id="message-display" class="h-24 flex items-center justify-center">
+          <p
+            id="message-text"
+            class="text-xl text-pink-700 font-medium opacity-0 transition-opacity duration-200"
+          >
+          </p>
+        </div>
+        <!-- Single Button -->
+        <button
+          id="message-button"
+          class="mt-4 bg-pink-500 hover:bg-pink-600 active:bg-pink-700 text-white rounded-lg py-3 px-8 text-lg font-medium transition-all duration-300 transform hover:scale-105 shadow-md"
+        >
+          Hej Mamma, klicka här! ✨
+        </button>
+      </div>
+      <!-- Balloon Container (Decorative) -->
+      <div id="balloon-container" class="absolute inset-0 pointer-events-none">
+      </div>
+    </Wrapper>
+  </section>
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Messages for mom
+      const messages = [
+        "Jag älskar dig, mamma!",
+        "Tack för allt du gör 💐",
+        "Du är hjärtat i vår familj ❤️",
+        "Din kärlek betyder allt för mig 🌍",
+        "Glad mors dag 💕",
+        "Evigt tacksam för dig 💖",
+      ];
+      // Track current message index
+      let currentIndex = 0;
+      // Get UI elements
+      const messageButton = document.getElementById("message-button");
+      const messageText = document.getElementById("message-text");
+      const balloonContainer = document.getElementById("balloon-container");
+      // Add click event to button
+      messageButton.addEventListener("click", function () {
+        // Show next message
+        showMessage(currentIndex);
+        // Update index for next click (cycle through messages)
+        currentIndex = (currentIndex + 1) % messages.length;
+        // Create balloon animation
+        createBalloon();
+      });
+      // Function to display a message with animation
+      function showMessage(index) {
+        // Fade out current message
+        messageText.classList.remove("opacity-100");
+        messageText.classList.add("opacity-0");
+        // After fade out, change text and fade in
+        setTimeout(() => {
+          messageText.textContent = messages[index];
+          messageText.classList.remove("opacity-0");
+          messageText.classList.add("opacity-100");
+        }, 500);
+      }
+      // Function to create decorative balloons
+      function createBalloon() {
+        const balloon = document.createElement("div");
+        const size = Math.floor(Math.random() * 40) + 40; // 40-80px
+        // Random balloon emoji
+        const balloons = ["🎈", "❤️", "💖", "💕", "💐"];
+        const emoji = balloons[Math.floor(Math.random() * balloons.length)];
+        // Random position
+        const left = Math.random() * 90 + 5; // 5-95%
+        // Set balloon properties
+        balloon.className = "absolute pointer-events-none";
+        balloon.style.left = `${left}%`;
+        balloon.style.bottom = "-20px";
+        balloon.style.fontSize = `${size}px`;
+        balloon.innerHTML = emoji;
+        // Add to container
+        balloonContainer.appendChild(balloon);
+        // Animate upward
+        setTimeout(() => {
+          balloon.style.transition =
+            "transform 15s ease-out, opacity 15s ease-in";
+          balloon.style.transform = `translateY(-${window.innerHeight + 100}px) rotate(${Math.random() * 30 - 15}deg)`;
+          balloon.style.opacity = "0";
+        }, 10);
+        // Remove after animation completes
+        setTimeout(() => {
+          if (balloon.parentNode === balloonContainer) {
+            balloon.remove();
+          }
+        }, 15000);
+      }
+      // Create initial balloons
+      for (let i = 0; i < 5; i++) {
+        setTimeout(createBalloon, i * 300);
+      }
+      // Create balloons periodically
+      setInterval(createBalloon, 3000);
+      // Show first message after a short delay
+      setTimeout(() => {
+        showMessage(currentIndex);
+        currentIndex = (currentIndex + 1) % messages.length;
+      }, 1000);
+    });
+  </script>
 </BaseLayout>
